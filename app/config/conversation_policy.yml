@@ -1,0 +1,24 @@
+{
+  "simple_chat_description": "Use for normal chat, short advice, unclear short messages, simple emotional support, simple knowledge questions, and first or second issue mentions.",
+  "langgraph_trigger_description": "Use for explicit analysis, plan, step-by-step, strategy, multi-constraint decisions, repeated issues, long/deep emotional cases, high depth, or high complexity.",
+  "complex_case_description": "A case is complex when the message has repeated issue markers, multiple constraints, explicit analysis/planning request, or long competing goals.",
+  "unclear_message_description": "Unclear messages should stay on the simple path and let the LLM ask one natural clarification question.",
+  "document_request_description": "Document requests refer to files, uploaded documents, knowledge base material, or user-provided references.",
+  "resource_request_description": "Resource requests ask for curated links, videos, podcasts, books, sources, or recommendations.",
+  "depth_scoring_description": "Depth increases with repeated issue turns, deep issue markers, long messages, and stable issue tags.",
+  "deterministic_patterns": {
+    "document_request": ["file", "document", "uploaded", "knowledge base", "ملف", "الملف", "مستند", "المستند", "المرجع", "الداتا", "اللي رفعته", "ارجعي للملف", "بناءً على الملف", "بناء على الملف", "حسب المستند"],
+    "analysis": ["analyze", "analysis", "plan", "step by step", "strategy", "حللي", "تحليل", "خطة", "خطوة خطوة", "استراتيجية"],
+    "deep": ["بقالي", "شهر", "أسابيع", "كل يوم", "دايما", "بفضل أفكر", "مش قادرة", "مش قادر"],
+    "constraints": ["عشان", "وفي نفس الوقت", "لكن", "فلوس", "وقت", "دراسة", "شغل", "مسؤولية", "أهل"],
+    "issues": {
+      "sleep": ["نوم", "أنام", "انام", "أرق", "sleep"],
+      "anxiety": ["قلق", "قلقان", "قلقانة", "توتر", "anxiety"],
+      "decision": ["محتار", "محتارة", "اختار", "قرار", "أسيب", "اكمل"],
+      "burnout": ["إرهاق", "ضغط", "مجهدة", "burnout", "overwhelmed"],
+      "emotion": ["مخنوق", "مخنوقة", "زعلان", "مشاعر", "emotional"],
+      "productivity": ["وقت", "أبدأ", "ابدأ", "انتاجية", "شغل", "دراسة"],
+      "overthinking": ["تفكير مفرط", "التفكير المفرط", "overthinking"]
+    }
+  }
+}

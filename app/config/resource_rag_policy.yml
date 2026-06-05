@@ -1,0 +1,51 @@
+{
+  "explicit_resource_request_semantic_description": "Classify semantically whether the user is asking for a curated resource such as a link, video, podcast, book, source, or recommendation.",
+  "recommendation_timing_policy": {
+    "explicit_request": "Recommend immediately only from the curated catalog when confidence and match quality are sufficient.",
+    "delayed_suggestion": "Without an explicit request, delay resources until the issue is stable, deep enough, and a strong catalog match exists.",
+    "permission": "For useful but not deep-enough resource cases, ask permission without links.",
+    "no_recommendation": "Do not recommend for casual chat, unclear messages, weak matches, cooldown, declined resources, changed issues, or when a direct answer is needed first."
+  },
+  "max_default_recommendations": 1,
+  "max_explicit_recommendations": 3,
+  "strong_match_threshold": 0.78,
+  "permission_threshold": 0.55,
+  "min_turns_before_suggest": 3,
+  "min_depth_before_recommend": 0.75,
+  "cooldown_turns": 5,
+  "media_type_preferences": ["video", "podcast", "book_summary_video", "link"],
+  "ranking_weights": {
+    "same_mbti": 0.35,
+    "tag_overlap_base": 0.25,
+    "tag_overlap_increment": 0.1,
+    "compatible_tag_base": 0.25,
+    "compatible_tag_increment": 0.06,
+    "arabic_language": 0.08,
+    "catalog_trigger_keyword": 0.2,
+    "general_support": 0.12
+  },
+  "compatible_issue_tags": {
+    "emotion": ["emotional_awareness", "emotional_suppression", "emotional_flooding", "emotional_absorption"],
+    "anxiety": ["emotional_awareness", "change_fear"],
+    "burnout": ["general_support", "perfectionism"],
+    "productivity": ["general_support", "perfectionism"],
+    "decision": ["general_support", "change_fear"],
+    "overthinking": ["emotional_awareness", "perfectionism"]
+  },
+  "catalog_paths": {
+    "jsonl": "mbti_resource_catalog.jsonl",
+    "csv": "mbti_resource_catalog.csv",
+    "spec": "mbti_rag_data_spec.md"
+  },
+  "deterministic_patterns": {
+    "resource_request": ["recommend", "link", "video", "podcast", "book", "resource", "لينك", "فيديو", "بودكاست", "كتاب", "مصدر", "ترشيح", "رشحي", "رشحيلي", "حاجة أسمعها", "حاجة اسمعها", "حاجة أشوفها", "حاجة اشوفها", "ابعتي حاجة"],
+    "more_results": ["more", "3", "three", "كذا", "أكتر", "اكتر", "أكثر", "قائمة"],
+    "decline_resources": ["مش عايز", "مش عايزة", "بدون لينكات", "بلاش", "no links", "don't recommend"],
+    "media_types": {
+      "video": ["video", "فيديو"],
+      "podcast": ["podcast", "بودكاست"],
+      "book": ["book", "كتاب"],
+      "link": ["link", "لينك", "مصدر"]
+    }
+  }
+}

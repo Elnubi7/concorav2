@@ -1,0 +1,155 @@
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.pyo
+*.so
+.Python
+
+# Environment/secrets
+.env
+.env.*
+!.env.example
+*.env
+*.env.*
+!.env.example
+.envrc
+secrets/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Logs
+logs/
+log/
+*.log
+*.log.*
+uvicorn.log
+gunicorn.log
+
+# Test/cache
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+.cache/
+coverage.xml
+.coverage
+.coverage.*
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+site/
+*.egg-info/
+.eggs/
+*.egg
+pip-wheel-metadata/
+wheelhouse/
+
+# Database/local storage
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.duckdb
+*.parquet.tmp
+local.db
+dev.db
+data/local/
+storage/
+uploads/
+
+# Docker/local volumes
+postgres_data/
+redis_data/
+docker-data/
+docker_volumes/
+.docker/
+tmp/docker/
+
+# IDE/OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+.env*/
+!.env.example
+virtualenv/
+
+# Conda environments
+.conda/
+conda-env/
+envs/
+.mamba/
+
+# Local Ollama/model files
+.ollama/
+ollama/
+models/
+model_cache/
+.cache/ollama/
+*.gguf
+*.safetensors
+*.bin
+
+# Project-specific local files
+.agents/
+.codex/
+*.local
+*.local.*
+*.pid
+*.sock
+
+# Keep deployment/source/catalog files trackable
+!.env.example
+!requirements.txt
+!pyproject.toml
+!README.md
+!Dockerfile
+!docker-compose.yml
+!alembic.ini
+!alembic/
+!alembic/**
+!app/
+!app/**
+!app/prompts/
+!app/prompts/**
+!app/config/
+!app/config/**
+!scripts/
+!scripts/**
+!tests/
+!tests/**
+!mbti_resource_catalog.jsonl
+!mbti_resource_catalog.csv
+!mbti_rag_data_spec.md
