@@ -71,13 +71,16 @@ os.environ.setdefault("STREAMING_ENABLED", "true")
 os.environ.setdefault("ALLOW_WILDCARD_CORS", "false")
 
 from app.core.config import get_settings  # noqa: E402
-from app.db.session import Base, SessionLocal, engine  # noqa: E402
+from app.db.session import Base, get_engine, get_sessionmaker, reset_db_engine_cache  # noqa: E402
 from app.services.conversation_intelligence import ConversationIntelligence  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
 def database() -> Generator[None, None, None]:
     ConversationIntelligence._contexts.clear()
+    get_settings.cache_clear()
+    reset_db_engine_cache()
+    engine = get_engine()
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     yield
@@ -86,7 +89,7 @@ def database() -> Generator[None, None, None]:
 
 @pytest.fixture()
 def db():
-    session = SessionLocal()
+    session = get_sessionmaker()()
     try:
         yield session
     finally:

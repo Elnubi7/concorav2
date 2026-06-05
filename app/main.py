@@ -4,10 +4,12 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
-from app.core.config import get_settings
+from app.core.config import RuntimeConfigError, get_settings, validate_runtime_settings
 from app.core.errors import register_error_handlers
-from app.core.logging import configure_logging, request_id_ctx
+from app.core.logging import configure_logging, get_logger, request_id_ctx
 from app.core.rate_limit import RateLimiter
+
+logger = get_logger(__name__)
 
 
 def create_app() -> FastAPI:
@@ -24,6 +26,14 @@ def create_app() -> FastAPI:
     )
 
     rate_limiter = RateLimiter(settings)
+
+    @app.on_event("startup")
+    async def validate_runtime_configuration() -> None:
+        try:
+            validate_runtime_settings(settings)
+        except RuntimeConfigError as exc:
+            logger.error("runtime_configuration_invalid errors=%s", exc.errors)
+            raise RuntimeError("Invalid runtime configuration: " + "; ".join(exc.errors)) from exc
 
     @app.middleware("http")
     async def request_context_middleware(request: Request, call_next):

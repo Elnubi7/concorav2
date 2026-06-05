@@ -13,10 +13,10 @@ router = APIRouter(prefix="/documents", tags=["documents"])
 
 @router.post("", response_model=DocumentUploadResponse)
 def upload_document(request: DocumentUploadRequest, db: Session | None = Depends(get_db), settings: Settings = Depends(get_settings)) -> DocumentUploadResponse:
+    if not settings.enable_db or db is None:
+        raise AppError("Database is disabled", 503)
     if not settings.enable_rag:
         raise AppError("Document retrieval is disabled", 404)
-    if db is None:
-        raise AppError("Database is required for document retrieval", 503)
     try:
         document_id, count = DocumentService(db, settings).upload(
             title=request.title,
@@ -35,10 +35,10 @@ def upload_document(request: DocumentUploadRequest, db: Session | None = Depends
 
 @router.post("/reindex", response_model=ReindexResponse)
 def reindex_documents(db: Session | None = Depends(get_db), settings: Settings = Depends(get_settings)) -> ReindexResponse:
+    if not settings.enable_db or db is None:
+        raise AppError("Database is disabled", 503)
     if not settings.enable_rag:
         raise AppError("Document retrieval is disabled", 404)
-    if db is None:
-        raise AppError("Database is required for document retrieval", 503)
     try:
         documents_seen, chunks_indexed = DocumentService(db, settings).reindex()
     except EmbeddingProviderError as exc:

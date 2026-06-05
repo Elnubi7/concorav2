@@ -12,9 +12,11 @@ __pycache__/
 .env
 .env.*
 !.env.example
+!.env.server.example
 *.env
 *.env.*
 !.env.example
+!.env.server.example
 .envrc
 secrets/
 *.pem
@@ -104,6 +106,7 @@ env/
 ENV/
 .env*/
 !.env.example
+!.env.server.example
 virtualenv/
 
 # Conda environments
@@ -132,6 +135,7 @@ model_cache/
 
 # Keep deployment/source/catalog files trackable
 !.env.example
+!.env.server.example
 !requirements.txt
 !pyproject.toml
 !README.md

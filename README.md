@@ -23,6 +23,36 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 
 Set `GITHUB_TOKEN` in `.env` when using the default GitHub Models provider.
 
+## Server Deployment Without DB/RAG
+
+Use hosting-provider environment variables for production secrets. Do not commit `.env`.
+
+```dotenv
+APP_ENV=production
+SIMPLE_CHAT_MODE=true
+ENABLE_LANGGRAPH=true
+ENABLE_RESOURCE_RAG=true
+ENABLE_RAG=false
+ENABLE_DB=false
+ENABLE_REDIS=false
+ENABLE_MEMORY=false
+LLM_PROVIDER=github_models
+GITHUB_TOKEN=
+GITHUB_MODELS_BASE_URL=https://models.github.ai/inference
+LLM_MODEL=openai/gpt-4.1-mini
+JWT_SECRET_KEY=
+CORS_ALLOWED_ORIGINS=
+```
+
+Validate the server profile before starting the app:
+
+```bash
+python scripts/validate_env.py --profile server
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+With `ENABLE_DB=false`, `ENABLE_REDIS=false`, and `ENABLE_RAG=false`, the server starts without database, Redis, embeddings, or vector-store configuration. Resource recommendations use only the local curated catalog files.
+
 ## Default Environment
 
 ```dotenv

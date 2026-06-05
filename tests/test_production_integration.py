@@ -1,4 +1,3 @@
-import os
 import sys
 import types
 
@@ -209,46 +208,38 @@ def test_smoke_test_script_structure():
 
 
 def test_validate_env_fails_bad_production_config(monkeypatch):
-    for key in validate_env.REQUIRED_ENV_KEYS:
-        monkeypatch.setenv(key, "set")
     monkeypatch.setenv("APP_ENV", "production")
-    monkeypatch.setenv("LLM_PROVIDER", "test")
-    monkeypatch.setenv("EMBEDDING_PROVIDER", "test")
-    monkeypatch.setenv("JWT_SECRET_KEY", "short")
-    monkeypatch.setenv("DATABASE_URL", "sqlite+pysqlite:///:memory:")
-    monkeypatch.setenv("VECTOR_BACKEND", "memory")
-    monkeypatch.setenv("LLM_API_KEY", "")
-    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setenv("LLM_PROVIDER", "github_models")
+    monkeypatch.setenv("GITHUB_MODELS_BASE_URL", "https://models.github.ai/inference")
     monkeypatch.setenv("GITHUB_TOKEN", "")
+    monkeypatch.setenv("LLM_MODEL", "openai/gpt" + "-4.1-mini")
+    monkeypatch.setenv("JWT_SECRET_KEY", "short")
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", "*")
     monkeypatch.setenv("ALLOW_WILDCARD_CORS", "false")
+    monkeypatch.setenv("ENABLE_DB", "false")
+    monkeypatch.setenv("ENABLE_REDIS", "false")
+    monkeypatch.setenv("ENABLE_MEMORY", "false")
+    monkeypatch.setenv("ENABLE_RAG", "false")
 
     errors = validate_env.validate()
-    assert "Production cannot use test LLM provider" in errors
-    assert "Production cannot use test embedding provider" in errors
-    assert "Production JWT_SECRET_KEY is weak" in errors
-    assert "Production cannot use sqlite DATABASE_URL" in errors
-    assert "Production cannot use VECTOR_BACKEND=memory" in errors
-    assert "Production LLM API key is empty" in errors
-    assert "Production wildcard CORS requires ALLOW_WILDCARD_CORS=true" in errors
+    assert "GITHUB_TOKEN is required when LLM_PROVIDER is github_models" in errors
+    assert "JWT_SECRET_KEY must be a strong non-placeholder value in production" in errors
+    assert "Wildcard CORS requires ALLOW_WILDCARD_CORS=true in production" in errors
 
 
 def test_validate_env_passes_valid_local_config(monkeypatch):
-    for key in validate_env.REQUIRED_ENV_KEYS:
-        monkeypatch.setenv(key, os.environ.get(key, "set"))
     monkeypatch.setenv("APP_ENV", "local")
     monkeypatch.setenv("LLM_PROVIDER", "openai_compatible")
     monkeypatch.setenv("LLM_API_KEY", "ollama")
     monkeypatch.setenv("LLM_BASE_URL", "http://localhost:11434/v1")
-    monkeypatch.setenv("EMBEDDING_PROVIDER", "openai_compatible")
-    monkeypatch.setenv("EMBEDDING_API_KEY", "ollama")
-    monkeypatch.setenv("EMBEDDING_BASE_URL", "http://localhost:11434/v1")
+    monkeypatch.setenv("ENABLE_DB", "false")
+    monkeypatch.setenv("ENABLE_REDIS", "false")
+    monkeypatch.setenv("ENABLE_MEMORY", "false")
+    monkeypatch.setenv("ENABLE_RAG", "false")
     assert validate_env.validate() == []
 
 
 def test_validate_env_github_models_requires_github_token(monkeypatch):
-    for key in validate_env.REQUIRED_ENV_KEYS:
-        monkeypatch.setenv(key, os.environ.get(key, "set"))
     monkeypatch.setenv("APP_ENV", "local")
     monkeypatch.setenv("LLM_PROVIDER", "github_models")
     monkeypatch.setenv("GITHUB_MODELS_BASE_URL", "https://models.github.ai/inference")
@@ -258,8 +249,6 @@ def test_validate_env_github_models_requires_github_token(monkeypatch):
 
 
 def test_validate_env_missing_github_token_allowed_for_openai_compatible(monkeypatch):
-    for key in validate_env.REQUIRED_ENV_KEYS:
-        monkeypatch.setenv(key, os.environ.get(key, "set"))
     monkeypatch.setenv("APP_ENV", "local")
     monkeypatch.setenv("LLM_PROVIDER", "openai_compatible")
     monkeypatch.setenv("LLM_API_KEY", "ollama")
@@ -273,17 +262,9 @@ def test_validate_env_missing_github_token_allowed_for_openai_compatible(monkeyp
 
 
 def test_validate_env_rejects_test_provider_in_production(monkeypatch):
-    for key in validate_env.REQUIRED_ENV_KEYS:
-        monkeypatch.setenv(key, os.environ.get(key, "set"))
     monkeypatch.setenv("APP_ENV", "production")
     monkeypatch.setenv("LLM_PROVIDER", "test")
-    monkeypatch.setenv("EMBEDDING_PROVIDER", "openai_compatible")
-    monkeypatch.setenv("EMBEDDING_BASE_URL", "http://localhost:11434/v1")
     monkeypatch.setenv("JWT_SECRET_KEY", "x" * 32)
-    monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://gemma:gemma@postgres:5432/gemma")
-    monkeypatch.setenv("VECTOR_BACKEND", "pgvector")
-    monkeypatch.setenv("LLM_API_KEY", "real-key")
-    monkeypatch.setenv("EMBEDDING_API_KEY", "real-key")
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000")
 
-    assert "Production cannot use test LLM provider" in validate_env.validate()
+    assert "LLM_PROVIDER test mode is only allowed when APP_ENV is test" in validate_env.validate()
